@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Animated } from 'react-native';
 import Login from './Login'; 
-import Signup from '../../myapp/components/Signup'; 
-import Header from '../../myapp/components/Header1'; 
-import styles from '../../myapp/AppStyling';
+import Signup from './Signup'; 
+import Header from './Header1'; 
+import styles from '../AppStyling';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,8 +14,7 @@ const Auth = () => {
   return (
     <View style={styles.container}>
       <Header />
-
-      <View style={styles.authContainer}>
+      <View style={styles.formContainer}>
         {isLogin ? (
           <Animated.View style={styles.formContainer}>
             <Login toggleAuth={toggleAuth} />
