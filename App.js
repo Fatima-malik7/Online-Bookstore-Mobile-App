@@ -1,34 +1,26 @@
-// import { StatusBar } from 'expo-status-bar';
-// import { StyleSheet, Text, View } from 'react-native';
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Open up App.js to start working on your app!</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import TryComponent from './components/try';  // Import the TryComponent
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import CardDetails from './components/CardDetails';
+import CashOnDelivery from './components/CashOnDelivery';
 
-const App = () => {
+const Stack = createStackNavigator();
+
+export default function App() {
   return (
-    <SafeAreaView>
-      <TryComponent />  {/* Use the TryComponent in App.js */}
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="CardDetails">
+        <Stack.Screen 
+          name="CardDetails" 
+          component={CardDetails} 
+          options={{ title: 'Card Payment' }} 
+        />
+        <Stack.Screen 
+          name="CashOnDelivery" 
+          component={CashOnDelivery} 
+          options={{ title: 'Cash On Delivery' }} 
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-};
-
-export default App;
+}
