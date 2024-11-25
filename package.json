@@ -9,11 +9,16 @@
     "web": "expo start --web"
   },
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "@expo/metro-runtime": "~4.0.0",
+>>>>>>> 310357040506de3ebd531eb8f13984cd05e7938a
     "@react-navigation/native": "^7.0.4",
     "@react-navigation/stack": "^7.0.6",
     "expo": "~52.0.11",
     "expo-status-bar": "~2.0.0",
     "react": "18.3.1",
+<<<<<<< HEAD
     "react-native": "0.76.3",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-reanimated": "^3.16.2",
@@ -22,6 +27,18 @@
     "react-dom": "18.3.1",
     "react-native-web": "~0.19.13",
     "@expo/metro-runtime": "~4.0.0"
+=======
+    "react-dom": "18.3.1",
+    "react-native": "0.76.3",
+    "react-native-gesture-handler": "^2.21.2",
+    "react-native-get-random-values": "^1.11.0",
+    "react-native-reanimated": "^3.16.2",
+    "react-native-safe-area-context": "^4.14.0",
+    "react-native-screens": "^4.3.0",
+    "react-native-vector-icons": "^10.2.0",
+    "react-native-web": "~0.19.13",
+    "web-streams-polyfill": "^4.0.0"
+>>>>>>> 310357040506de3ebd531eb8f13984cd05e7938a
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
