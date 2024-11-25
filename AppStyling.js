@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   },
   formWrapperHeading: {
     fontSize: 24,
+    fontWeight:'bold',
     textAlign: 'center',
     color: '#556b2f',
     marginBottom: 15,
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#789d82',
+    backgroundColor: '#556b2f',
     padding: 15,
     borderRadius: 10,
     marginVertical: 20,
