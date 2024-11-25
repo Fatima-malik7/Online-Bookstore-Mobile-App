@@ -2,21 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Header from './Header1';
-const CheckoutForm = ({ route, navigation }) => {
-  const { selectedItems } = route.params || { selectedItems: [] };
+import { useNavigation } from '@react-navigation/native';
+const CheckoutForm = ({ selectedItems = [] }) => {
   const [description, setDescription] = useState('');
   const [bookPrice, setBookPrice] = useState(0);
   const deliveryCharges = 250;
-
+  const navigation = useNavigation();
   useEffect(() => {
-    const totalPrice = selectedItems.reduce((total, item) => total + item.price, 0);
+    console.log("Selected Items:", selectedItems); // Debug log
+    const totalPrice = selectedItems.reduce((total, item) => total + (item.price || 0), 0);
     setBookPrice(totalPrice);
   }, [selectedItems]);
-
+  
   const totalAmount = bookPrice + deliveryCharges;
 
   const handleConfirm = () => {
-    navigation.navigate('Pay', { subtotal: bookPrice, deliveryCharges });
+    navigation.navigate('PayPage', { subtotal: bookPrice, deliveryCharges });
   };
 
   return (

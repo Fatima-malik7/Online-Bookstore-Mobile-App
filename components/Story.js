@@ -7,8 +7,9 @@ const Story = ({ heading, books = [], addToCart, notificationCount = 0, cartItem
   const navigation = useNavigation();
 
   const handleBuyNow = (book) => {
-    navigation.navigate('Checkout', { selectedItems: [book] });
+    navigation.navigate('Checkout', { selectedItems: [book] }); // Pass as an array
   };
+  
 
   return (
     <View style={styles.storycontainer}>
@@ -21,9 +22,11 @@ const Story = ({ heading, books = [], addToCart, notificationCount = 0, cartItem
               <View key={index} style={styles.bookCard}>
                 <Image source={ book.image } style={styles.bookImage} />
                 <Text style={styles.bookTitle}>{book.name}</Text>
+                <Text style={styles.bookTitle}>{book.price}</Text>
                 <TouchableOpacity onPress={() => addToCart(book)} style={styles.addButton}>
-                  <Text style={styles.buttonText}>Add to Cart</Text>
-                </TouchableOpacity>
+  <Text style={styles.buttonText}>Add to Cart</Text>
+</TouchableOpacity>
+
                 <TouchableOpacity onPress={() => handleBuyNow(book)} style={styles.buyNowButton}>
                   <Text style={styles.buttonText}>Buy Now</Text>
                 </TouchableOpacity>

@@ -13,7 +13,7 @@ const Header = ({ cartCount, notificationCount }) => {
 
   const handleLogin = () => {
     alert('Profile Logout!');
-    navigation.navigate('Login'); // Navigate to Login screen
+    navigation.navigate('Auth'); // Navigate to Login screen
   };
 
   return (

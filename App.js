@@ -18,11 +18,16 @@ import UFriction from './components/Pages/UFiriction';
 import ULiterature from './components/Pages/ULitrature';
 import UMystery from './components/Pages/UMystery';
 import UHorror from './components/Pages/UHorror';
+import CardDetails from './components/CardDetails';
+import CartPage from './components/CartPage';
+import CashOnDelivery from './components/CashOnDelivery';
+import CheckoutForm from './components/CheckoutForm';
+import PayPage from './components/PayPage';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems =[], setCartItems] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
 
   const addToCart = (item) => {
@@ -44,13 +49,24 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen 
+          name="CashOnDelivery" 
+          children={() => <CashOnDelivery removeFromCart={removeFromCart} />} 
+        />
+        <Stack.Screen name="CardDetails" component={CardDetails} />
+        <Stack.Screen name="Checkout" component={CheckoutForm} initialParams={{ selectedItems: [] }} />
+        <Stack.Screen 
+        name="Cart" 
+        children={() => <CartPage cartItems={cartItems} setCartItems={setCartItems} />} 
+        />
+
+        <Stack.Screen 
+          name="Pay" 
+          children={() => <PayPage cartItems={cartItems} removeFromCart={removeFromCart} />} 
+        />
+        <Stack.Screen 
           name="Story" 
           children={() => (
-            <Story
-              cartItems={cartItems}
-              notificationCount={notificationCount}
-              addToCart={addToCart}
-            />
+            <Story cartItems={cartItems} notificationCount={notificationCount} addToCart={addToCart} />
           )}
         />
         <Stack.Screen name="Home" component={Home} />

@@ -1,15 +1,11 @@
-//cartpage
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, Button, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Import Material Icons or any other icon library
+import { FontAwesome } from '@expo/vector-icons'; 
+import { useNavigation } from '@react-navigation/native'; // Import hook
 import Header from './Header1';
-const CartPage = ({ navigation }) => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Book 1', price: 500, image: 'https://via.placeholder.com/50' },
-    { id: 2, name: 'Book 2', price: 600, image: 'https://via.placeholder.com/50' },
-    { id: 3, name: 'Book 3', price: 700, image: 'https://via.placeholder.com/50' },
-  ]);
+const CartPage = ({ cartItems = [], setCartItems }) => {
   const [selectedItems, setSelectedItems] = useState({});
+  const navigation = useNavigation(); // Use navigation hook
 
   const handleSelectItem = (id) => {
     setSelectedItems((prev) => ({
@@ -36,7 +32,7 @@ const CartPage = ({ navigation }) => {
     if (selected.length === 0) {
       alert('No items selected for checkout!');
     } else {
-      navigation.navigate('Checkout', { selectedItems: selected });
+      navigation.navigate('Checkout', { selectedItems: selected }); // Pass selected items to Checkout
     }
   };
 
@@ -57,14 +53,14 @@ const CartPage = ({ navigation }) => {
           <Text style={styles.emptyCart}>Your cart is empty.</Text>
         ) : (
           <FlatList
-            data={cartItems}
-            keyExtractor={(item) => item.id.toString()}
+            data={cartItems || []} // Ensure it's an array
+            keyExtractor={(item, index) => (item?.id ? item.id.toString() : index.toString())} 
             renderItem={({ item }) => (
               <View style={styles.cartItem}>
                 <TouchableOpacity onPress={() => handleSelectItem(item.id)} style={styles.imageContainer}>
                   <Image source={ item.image } style={styles.image} />
                   {selectedItems[item.id] && (
-                    <MaterialIcons name="check-circle" size={24} color="#556b2f" style={styles.selectedIcon} />
+                    <FontAwesome name="check-circle" size={24} color="#556b2f" style={styles.selectedIcon} />
                   )}
                 </TouchableOpacity>
                 <View style={styles.itemDetails}>
@@ -88,6 +84,10 @@ const CartPage = ({ navigation }) => {
     </View>
   );
 };
+
+
+export default CartPage;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -187,5 +187,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default CartPage;
