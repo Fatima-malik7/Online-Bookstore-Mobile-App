@@ -37,7 +37,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     gap:'250',
+<<<<<<< HEAD
+=======
     marginBottom:95,
+>>>>>>> 310357040506de3ebd531eb8f13984cd05e7938a
   },
   logo: {
     width: 80,
@@ -51,4 +54,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#696A22',
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 310357040506de3ebd531eb8f13984cd05e7938a
