@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-
+import Header from './Header1';
 // Firebase Database URL
 const BASE_URL = 'https://bookbliss-f0256-default-rtdb.firebaseio.com/';
 
@@ -67,8 +67,9 @@ const CardDetails = () => {
 
   return (
     <View style={styles.container}>
+      <Header />
       <View style={styles.formWrapper}>
-        <Text style={styles.header}>Enter Card Details</Text>
+        <Text style={styles.heading}>Enter Card Details</Text>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Card Holder Name:</Text>
           <TextInput
@@ -111,7 +112,7 @@ const CardDetails = () => {
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={saveCardDetailsToFirebase}>
-          <Text style={styles.buttonText}>Save Details</Text>
+          <Text style={styles.buttonText}>confirm</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     height: '70%',
     width: '100%',
     maxWidth: 350,
-    marginBottom: 80,
+    marginBottom: 70,
     padding: 12,
     backgroundColor: '#f3f6f4',
     borderRadius: 25,
@@ -140,10 +141,10 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
   },
-  header: {
+  heading: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 30,
     color: '#556B2F',
     textAlign: 'center',
   },

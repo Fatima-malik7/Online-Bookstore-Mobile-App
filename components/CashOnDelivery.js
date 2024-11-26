@@ -9,7 +9,7 @@ const CashOnDelivery = () => {
   const totalPayment = subtotal + deliveryCharges;
 
   const handleOrder = () => {
-    alert('Order Confirmed! Total Payment: PKR ${totalPayment}');
+    alert(`Order Confirmed! Total Payment: PKR ${totalPayment}`);
   };
 
   return (

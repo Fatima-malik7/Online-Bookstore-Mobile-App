@@ -133,18 +133,7 @@ const styles = StyleSheet.create({
     color: '#e4e1e1',
     fontSize: 16,
   },
-  // Cart Badge (for the Header cart icon)
-  cartBadge: {
-    position: 'absolute',
-    top: -5,
-    right: -10,
-    backgroundColor: '#789d82',
-    color: '#e4e1e1',
-    borderRadius: 50,
-    paddingVertical: 3,
-    paddingHorizontal: 8,
-    fontSize: 12,
-  },
+  
 });
 
 export default styles;

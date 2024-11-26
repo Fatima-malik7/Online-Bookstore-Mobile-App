@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, Button, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; 
-import { useNavigation } from '@react-navigation/native'; // Import hook
+import {  FontAwesome } from '@expo/vector-icons'; 
 import Header from './Header1';
+import { useNavigation } from '@react-navigation/native';
 const CartPage = ({ cartItems = [], setCartItems }) => {
   const [selectedItems, setSelectedItems] = useState({});
   const navigation = useNavigation(); // Use navigation hook
 
   const handleSelectItem = (id) => {
-    setSelectedItems((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
+    setSelectedItems((prev) => {
+      const updated = { ...prev, [id]: !prev[id] };
+      console.log('Toggling item:', id, updated);
+      return updated;
+    });
+  };  
+  
   const handleSelectAll = () => {
     const allSelected = cartItems.every((item) => selectedItems[item.id]);
     if (allSelected) {
@@ -26,13 +27,14 @@ const CartPage = ({ cartItems = [], setCartItems }) => {
       setSelectedItems(newSelectedItems);
     }
   };
+  
 
   const handleCheckoutSelected = () => {
     const selected = cartItems.filter((item) => selectedItems[item.id]);
     if (selected.length === 0) {
       alert('No items selected for checkout!');
     } else {
-      navigation.navigate('Checkout', { selectedItems: selected }); // Pass selected items to Checkout
+      navigation.navigate('Checkout', { selectedItems: selected });
     }
   };
 
@@ -53,24 +55,27 @@ const CartPage = ({ cartItems = [], setCartItems }) => {
           <Text style={styles.emptyCart}>Your cart is empty.</Text>
         ) : (
           <FlatList
-            data={cartItems || []} // Ensure it's an array
-            keyExtractor={(item, index) => (item?.id ? item.id.toString() : index.toString())} 
-            renderItem={({ item }) => (
-              <View style={styles.cartItem}>
-                <TouchableOpacity onPress={() => handleSelectItem(item.id)} style={styles.imageContainer}>
-                  <Image source={ item.image } style={styles.image} />
-                  {selectedItems[item.id] && (
-                    <FontAwesome name="check-circle" size={24} color="#556b2f" style={styles.selectedIcon} />
-                  )}
-                </TouchableOpacity>
-                <View style={styles.itemDetails}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>${item.price}</Text>
-                </View>
-                <Button title="Remove" color={'#FF0000'} onPress={() => removeFromCart(item.id)} />
-              </View>
-            )}
-          />
+  data={cartItems || []}
+  keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+  renderItem={({ item }) => {
+    console.log('Rendering item:', item.id, selectedItems[item.id]);
+    return (
+      <View style={styles.cartItem}>
+        <TouchableOpacity onPress={() => handleSelectItem(item.id)} style={styles.imageContainer}>
+          <Image source={item.image} style={styles.image} />
+          {selectedItems[item.id] && (
+            <FontAwesome name="check-circle" size={24} color="#556b2f" style={styles.selectedIcon} />
+          )}
+        </TouchableOpacity>
+        <View style={styles.itemDetails}>
+          <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.itemPrice}>${item.price}</Text>
+        </View>
+        <Button title="Remove" color="#FF0000" onPress={() => removeFromCart(item.id)} />
+      </View>
+    );
+  }}
+/>
         )}
         <TouchableOpacity style={styles.selectAllButton} onPress={handleSelectAll}>
           <Text style={styles.selectAllText}>
@@ -85,10 +90,6 @@ const CartPage = ({ cartItems = [], setCartItems }) => {
   );
 };
 
-
-export default CartPage;
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -97,17 +98,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f6f4',
     padding: 20,
   },
-  formWrapper: {
-    height: '70%',
-    width: '100%',
-    marginBottom:80,
-    maxWidth: 350,
-    padding: 20,
-    backgroundColor: '#f3f6f4',
-    borderRadius: 25,
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-    zIndex: 3,
-  },
+ // In styles
+formWrapper: {
+  height: '70%',
+  width: '100%',
+  marginBottom: 80,
+  maxWidth: 350,
+  padding: 20,
+  backgroundColor: '#f3f6f4',
+  borderRadius: 25,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.1,
+  shadowRadius: 6,
+  elevation: 4, // Android-specific shadow
+},
+
   header: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -187,3 +193,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default CartPage;

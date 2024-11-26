@@ -27,20 +27,27 @@ import PayPage from './components/PayPage';
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [cartItems =[], setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
 
+  // Update notification count when adding an item
   const addToCart = (item) => {
-    setCartItems((prevItems) => [...prevItems, item]);
-    setNotificationCount((prevCount) => prevCount + 1);
+    setCartItems((prevItems) => {
+      const updatedCart = [...prevItems, item];
+      setNotificationCount(updatedCart.length);  // Update notification count
+      return updatedCart;
+    });
   };
 
-  const removeFromCart = (index) => {
-    setCartItems((prevItems) => prevItems.filter((_, i) => i !== index));
-    if (notificationCount > 0) {
-      setNotificationCount(notificationCount - 1);
-    }
+  // Remove item from cart and update notification count
+  const removeFromCart = (item) => {
+    setCartItems((prevItems) => {
+      const updatedCart = prevItems.filter(cartItem => cartItem !== item);
+      setNotificationCount(updatedCart.length);  // Update notification count
+      return updatedCart;
+    });
   };
+
 
   return (
     <NavigationContainer>
@@ -66,7 +73,12 @@ const App = () => {
         <Stack.Screen 
           name="Story" 
           children={() => (
-            <Story cartItems={cartItems} notificationCount={notificationCount} addToCart={addToCart} />
+            <Story 
+            cartItems={cartItems} 
+            notificationCount={notificationCount}  
+            addToCart={addToCart} 
+            removeFromCart={removeFromCart} 
+          />
           )}
         />
         <Stack.Screen name="Home" component={Home} />

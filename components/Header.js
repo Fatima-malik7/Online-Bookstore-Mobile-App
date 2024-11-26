@@ -3,14 +3,16 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // For FontAwesome icons
 import { useNavigation } from '@react-navigation/native'; // React Navigation
 
-const Header = ({ cartCount, notificationCount }) => {
+const Header = ({  notificationCount }) => {
   const navigation = useNavigation();
 
+  // Handle navigation to Cart screen
   const handleAddToCart = () => {
     alert('Added to cart!');
     navigation.navigate('Cart'); // Navigate to Cart screen
   };
 
+  // Handle navigation to Login screen
   const handleLogin = () => {
     alert('Profile Logout!');
     navigation.navigate('Auth'); // Navigate to Login screen
@@ -23,7 +25,8 @@ const Header = ({ cartCount, notificationCount }) => {
         {/* Cart Icon */}
         <TouchableOpacity style={styles.iconWrapper} onPress={handleAddToCart}>
           <FontAwesome name="shopping-cart" style={styles.icon} />
-          {cartCount > 0 && <Text style={styles.badge}>{cartCount}</Text>}
+          {/* Display notification badge if notificationCount > 0 */}
+          {notificationCount > 0 && <Text style={styles.cartBadge}>{notificationCount}</Text>}
         </TouchableOpacity>
 
         {/* User Icon */}
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
-    marginVertical:'15',
+    marginVertical: '15',
     backgroundColor: '#ffffff',
     height: 70, // Adjusted height
     elevation: 3, // Shadow for Android
@@ -69,16 +72,16 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#696A22',
   },
-  badge: {
-    position: 'absolute',
-    backgroundColor: '#444528',
-    color: 'white',
-    borderRadius: 50,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    fontSize: 12,
-    top: -5,
-    right: -10,
-    textAlign: 'center',
-  },
+ // Cart Badge (for the Header cart icon)
+ cartBadge: {
+  position: 'absolute',
+  top: -5,
+  right: -10,
+  backgroundColor: '#789d82',
+  color: '#e4e1e1',
+  borderRadius: 50,
+  paddingVertical: 3,
+  paddingHorizontal: 8,
+  fontSize: 12,
+},
 });
