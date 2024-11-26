@@ -27,27 +27,27 @@ import PayPage from './components/PayPage';
 const Stack = createStackNavigator();
 
 const App = () => {
+  // State for cart items
   const [cartItems, setCartItems] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
 
-  // Update notification count when adding an item
+  // Function to add an item to the cart
   const addToCart = (item) => {
     setCartItems((prevItems) => {
       const updatedCart = [...prevItems, item];
-      setNotificationCount(updatedCart.length);  // Update notification count
+      setNotificationCount(updatedCart.length); // Update notification count
       return updatedCart;
     });
   };
 
-  // Remove item from cart and update notification count
-  const removeFromCart = (item) => {
+  // Function to remove an item from the cart
+  const removeFromCart = (index) => {
     setCartItems((prevItems) => {
-      const updatedCart = prevItems.filter(cartItem => cartItem !== item);
-      setNotificationCount(updatedCart.length);  // Update notification count
+      const updatedCart = prevItems.filter((_, i) => i !== index);
+      setNotificationCount(updatedCart.length); // Update notification count
       return updatedCart;
     });
   };
-
 
   return (
     <NavigationContainer>
@@ -55,80 +55,84 @@ const App = () => {
         <Stack.Screen name="Auth" component={Auth} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen 
-          name="CashOnDelivery" 
-          children={() => <CashOnDelivery removeFromCart={removeFromCart} />} 
+        <Stack.Screen
+          name="CashOnDelivery"
+          children={() => <CashOnDelivery removeFromCart={removeFromCart} />}
         />
         <Stack.Screen name="CardDetails" component={CardDetails} />
         <Stack.Screen name="Checkout" component={CheckoutForm} initialParams={{ selectedItems: [] }} />
-        <Stack.Screen 
-        name="Cart" 
-        children={() => <CartPage cartItems={cartItems} setCartItems={setCartItems} />} 
-        />
-
-        <Stack.Screen 
-          name="Pay" 
-          children={() => <PayPage cartItems={cartItems} removeFromCart={removeFromCart} />} 
-        />
-        <Stack.Screen 
-          name="Story" 
+        <Stack.Screen
+          name="Cart"
           children={() => (
-            <Story 
-            cartItems={cartItems} 
-            notificationCount={notificationCount}  
-            addToCart={addToCart} 
-            removeFromCart={removeFromCart} 
-          />
+            <CartPage
+              cartItems={cartItems}
+              removeFromCart={removeFromCart}
+            />
+          )}
+        />
+        <Stack.Screen
+          name="Pay"
+          children={() => <PayPage cartItems={cartItems} removeFromCart={removeFromCart} />}
+        />
+        <Stack.Screen
+          name="Story"
+          children={() => (
+            <Story
+              cartItems={cartItems}
+              notificationCount={notificationCount}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+            />
           )}
         />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen 
-          name="CrimeAndThrills" 
-          children={() => <CrimeAndThrills addToCart={addToCart} />} 
+        <Stack.Screen
+          name="CrimeAndThrills"
+          children={() => <CrimeAndThrills addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="Fairytales" 
-          children={() => <Fairytails addToCart={addToCart} />} 
+        <Stack.Screen
+          name="Fairytales"
+          children={() => <Fairytails addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="Friction" 
-          children={() => <Friction addToCart={addToCart} />} 
+        <Stack.Screen
+          name="Friction"
+          children={() => <Friction addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="Literature" 
-          children={() => <Literature addToCart={addToCart} />} 
+        <Stack.Screen
+          name="Literature"
+          children={() => <Literature addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="Mystery" 
-          children={() => <Mystery addToCart={addToCart} />} 
+        <Stack.Screen
+          name="Mystery"
+          children={() => <Mystery addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="Horror" 
-          children={() => <Horror addToCart={addToCart} />} 
+        <Stack.Screen
+          name="Horror"
+          children={() => <Horror addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="UCrimeAndThrills" 
-          children={() => <UCrimeAndThrills addToCart={addToCart} />} 
+        <Stack.Screen
+          name="UCrimeAndThrills"
+          children={() => <UCrimeAndThrills addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="UFairytales" 
-          children={() => <UFairytales addToCart={addToCart} />} 
+        <Stack.Screen
+          name="UFairytales"
+          children={() => <UFairytales addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="UFriction" 
-          children={() => <UFriction addToCart={addToCart} />} 
+        <Stack.Screen
+          name="UFriction"
+          children={() => <UFriction addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="ULiterature" 
-          children={() => <ULiterature addToCart={addToCart} />} 
+        <Stack.Screen
+          name="ULiterature"
+          children={() => <ULiterature addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="UMystery" 
-          children={() => <UMystery addToCart={addToCart} />} 
+        <Stack.Screen
+          name="UMystery"
+          children={() => <UMystery addToCart={addToCart} />}
         />
-        <Stack.Screen 
-          name="UHorror" 
-          children={() => <UHorror addToCart={addToCart} />} 
+        <Stack.Screen
+          name="UHorror"
+          children={() => <UHorror addToCart={addToCart} />}
         />
       </Stack.Navigator>
     </NavigationContainer>
