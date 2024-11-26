@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.0",
+    "@react-native-community/checkbox": "^0.5.17",
     "@react-navigation/native": "^7.0.4",
     "@react-navigation/stack": "^7.0.6",
     "axios": "^1.7.7",
@@ -25,7 +26,8 @@
     "react-native-screens": "^4.3.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
-    "web-streams-polyfill": "^4.0.0"
+    "web-streams-polyfill": "^4.0.0",
+    "expo-checkbox": "~4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

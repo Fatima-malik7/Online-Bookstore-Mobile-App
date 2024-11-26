@@ -1,48 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Button, TouchableOpacity } from 'react-native';
-import {  FontAwesome } from '@expo/vector-icons'; 
-import Header from './Header1';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-const CartPage = ({ cartItems = [], setCartItems }) => {
+import Header from './Header1';
+
+const CartPage = ({ cartItems, removeFromCart }) => {
   const [selectedItems, setSelectedItems] = useState({});
-  const navigation = useNavigation(); // Use navigation hook
+  const navigation = useNavigation();
 
-  const handleSelectItem = (id) => {
-    setSelectedItems((prev) => {
-      const updated = { ...prev, [id]: !prev[id] };
-      console.log('Toggling item:', id, updated);
-      return updated;
-    });
-  };  
-  
-  const handleSelectAll = () => {
-    const allSelected = cartItems.every((item) => selectedItems[item.id]);
-    if (allSelected) {
-      setSelectedItems({});
-    } else {
-      const newSelectedItems = {};
-      cartItems.forEach((item) => {
-        newSelectedItems[item.id] = true;
-      });
-      setSelectedItems(newSelectedItems);
-    }
+  // Function to handle selecting/deselecting items
+  const handleSelectItem = (index) => {
+    setSelectedItems((prev) => ({
+      ...prev,
+      [index]: !prev[index], // Toggle selection
+    }));
   };
-  
 
+  // Function to checkout selected items
   const handleCheckoutSelected = () => {
-    const selected = cartItems.filter((item) => selectedItems[item.id]);
+    const selected = cartItems.filter((_, index) => selectedItems[index]);
     if (selected.length === 0) {
-      alert('No items selected for checkout!');
-    } else {
-      navigation.navigate('Checkout', { selectedItems: selected });
+      alert('Please select items to checkout.');
+      return;
     }
-  };
-
-  const removeFromCart = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-    const updatedSelectedItems = { ...selectedItems };
-    delete updatedSelectedItems[id];
-    setSelectedItems(updatedSelectedItems);
+    navigation.navigate('Checkout', { selectedItems: selected }); // Pass selected items to Checkout screen
   };
 
   return (
@@ -50,41 +30,44 @@ const CartPage = ({ cartItems = [], setCartItems }) => {
       <Header />
       <View style={styles.formWrapper}>
         <Text style={styles.header}>Your Cart</Text>
-        
         {cartItems.length === 0 ? (
           <Text style={styles.emptyCart}>Your cart is empty.</Text>
         ) : (
-          <FlatList
-  data={cartItems || []}
-  keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
-  renderItem={({ item }) => {
-    console.log('Rendering item:', item.id, selectedItems[item.id]);
-    return (
-      <View style={styles.cartItem}>
-        <TouchableOpacity onPress={() => handleSelectItem(item.id)} style={styles.imageContainer}>
-          <Image source={item.image} style={styles.image} />
-          {selectedItems[item.id] && (
-            <FontAwesome name="check-circle" size={24} color="#556b2f" style={styles.selectedIcon} />
-          )}
-        </TouchableOpacity>
-        <View style={styles.itemDetails}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemPrice}>${item.price}</Text>
-        </View>
-        <Button title="Remove" color="#FF0000" onPress={() => removeFromCart(item.id)} />
-      </View>
-    );
-  }}
-/>
+          <>
+            <FlatList
+              data={cartItems}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <View style={styles.cartItem}>
+                  {/* Custom checkbox using TouchableOpacity */}
+                  <TouchableOpacity
+                    style={[
+                      styles.checkbox,
+                      selectedItems[index] && styles.checkboxChecked,
+                    ]}
+                    onPress={() => handleSelectItem(index)}
+                  >
+                    {selectedItems[index] && (
+                      <Text style={styles.checkboxText}>✔</Text> // Represent checked state
+                    )}
+                  </TouchableOpacity>
+                  <Image source={{ uri: item.image }} style={styles.image} />
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <TouchableOpacity
+                    style={styles.removeButton}
+                    onPress={() => removeFromCart(index)}
+                  >
+                    <Text style={styles.removeButtonText}>Remove</Text>
+                  </TouchableOpacity>
+
+                </View>
+              )}
+            />
+            <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckoutSelected}>
+              <Text style={styles.checkoutButtonText}>Checkout</Text>
+            </TouchableOpacity>
+          </>
         )}
-        <TouchableOpacity style={styles.selectAllButton} onPress={handleSelectAll}>
-          <Text style={styles.selectAllText}>
-            {cartItems.every((item) => selectedItems[item.id]) ? 'Deselect All' : 'Select All'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckoutSelected}>
-          <Text style={styles.buttonText}>Checkout</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -93,104 +76,90 @@ const CartPage = ({ cartItems = [], setCartItems }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#f3f6f4',
     padding: 20,
+    backgroundColor: '#F3F6F4',
   },
- // In styles
-formWrapper: {
-  height: '70%',
-  width: '100%',
-  marginBottom: 80,
-  maxWidth: 350,
-  padding: 20,
-  backgroundColor: '#f3f6f4',
-  borderRadius: 25,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.1,
-  shadowRadius: 6,
-  elevation: 4, // Android-specific shadow
-},
-
+  formWrapper: {
+    height: '40%',
+    width: '100%',
+    maxWidth: 350,
+    padding: 12,
+    backgroundColor: '#f3f6f4',
+    borderRadius: 25,
+    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+    zIndex: 3,
+  },
   header: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#556b2f',
+    fontSize: 20,
+    fontWeight:'bold',
     marginBottom: 20,
-  },
-  selectAllButton: {
-    backgroundColor: '#556b2f',
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 5,
-    alignItems: 'center',
-  },
-  selectAllText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#556B2F',
+    textAlign: 'center',
   },
   emptyCart: {
-    fontSize: 14,
+    fontSize: 18,
+    color: 'gray',
     textAlign: 'center',
-    color: '#8f9779',
     marginTop: 20,
   },
   cartItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
-    paddingHorizontal: 10,
+    padding: 10,
     marginBottom: 10,
-    backgroundColor: '#efefef',
+    backgroundColor: '#fff',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#b0b3b0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    elevation: 1,
   },
-  imageContainer: {
-    position: 'relative',
+  checkbox: {
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#556b2f',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  checkboxChecked: {
+    backgroundColor: '#556b2f',
+  },
+  checkboxText: {
+    color: '#fff',
+    fontSize: 18,
   },
   image: {
     width: 50,
     height: 50,
-    marginRight: 10,
-  },
-  selectedIcon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-  itemDetails: {
-    flex: 1,
-    paddingHorizontal: 10,
+    marginHorizontal: 10,
+    borderRadius: 5,
   },
   itemName: {
+    flex: 1,
     fontSize: 16,
     fontWeight: 'bold',
   },
-  itemPrice: {
+  removeButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 8,
+    borderRadius: 5,
+  },
+  removeButtonText: {
+    color: '#fff',
     fontSize: 14,
-    color: '#8f9779',
   },
   checkoutButton: {
     backgroundColor: '#556b2f',
+    padding: 15,
     borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    marginTop: 20,
     alignItems: 'center',
+    marginTop: 20,
   },
-  buttonText: {
+  checkoutButtonText: {
     color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 18,
   },
 });
 
