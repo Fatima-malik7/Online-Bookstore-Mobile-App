@@ -9,7 +9,7 @@ const CashOnDelivery = () => {
   const totalPayment = subtotal + deliveryCharges;
 const navigation = useNavigation();
 const handleOrder = () => {
-  alert('Order Confirmed! Continue Shopping 🎉');
+  alert('Order Confirmed! Continue Shopping 💫');
   setTimeout(() => {
     navigation.navigate('Home');
   }, 3000); 

@@ -55,7 +55,7 @@ const CartPage = () => {
   const handleCheckoutSelected = () => {
     const selected = cartItems.filter((_, index) => selectedItems[index]);
     if (selected.length === 0) {
-      alert('Please select items to checkout.');
+      alert('Please select items to checkout. ');
       return;
     }
     setTimeout(() => {

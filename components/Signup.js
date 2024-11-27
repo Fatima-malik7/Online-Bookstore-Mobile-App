@@ -17,7 +17,7 @@ const Signup = ({ toggleAuth }) => {
   const handleSignup = async () => {
     // Check if passwords match
     if (password !== confirmPassword) {
-      Alert.alert('Passwords do not match!');
+      Alert.alert('Passwords do not match! ❌');
       return;
     }
 
@@ -41,7 +41,7 @@ const Signup = ({ toggleAuth }) => {
             email: email,
           })
             .then(() => {
-              Alert.alert('Signup successful!');
+              Alert.alert('Signup successful! ✅');
               setTimeout(() => {
                 navigation.navigate('Home');
               }, 3000);
