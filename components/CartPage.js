@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 import Header from './Header1';
 
 const CartPage = ({ cartItems, removeFromCart }) => {
