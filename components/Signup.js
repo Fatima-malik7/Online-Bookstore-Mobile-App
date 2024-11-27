@@ -20,23 +20,29 @@ const Signup = ({ toggleAuth }) => {
       return;
     }
 
+    // Firebase Authentication - create user
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
 
-        // Save user data to Realtime Database
-        const userRef = ref(database, `users/${user.uid}`);
-        set(userRef, {
-          username: username,
-          email: email,
-        })
-          .then(() => {
-            Alert.alert('Signup successful!');
-            navigation.navigate('Home');
+        if (user && user.uid) {
+          // Save user data to Realtime Database
+          const userRef = ref(database, `users/${user.uid}`);
+
+          set(userRef, {
+            username: username,
+            email: email,
           })
-          .catch((error) => {
-            Alert.alert('Error saving data: ' + error.message);
-          });
+            .then(() => {
+              Alert.alert('Signup successful!');
+              navigation.navigate('Home');
+            })
+            .catch((error) => {
+              Alert.alert('Error saving data: ' + error.message);
+            });
+        } else {
+          Alert.alert('Error: User UID is undefined');
+        }
       })
       .catch((error) => {
         Alert.alert('Error: ' + error.message);

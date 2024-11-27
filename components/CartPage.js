@@ -51,7 +51,7 @@ const CartPage = ({ cartItems, removeFromCart }) => {
                       <Text style={styles.checkboxText}>✔</Text> // Represent checked state
                     )}
                   </TouchableOpacity>
-                  <Image source={{ uri: item.image }} style={styles.image} />
+                  <Image source={ item.image } style={styles.image} />
                   <Text style={styles.itemName}>{item.name}</Text>
                   <TouchableOpacity
                     style={styles.removeButton}
