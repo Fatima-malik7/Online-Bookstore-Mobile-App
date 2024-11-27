@@ -32,7 +32,9 @@ const Signup = ({ toggleAuth }) => {
         })
           .then(() => {
             Alert.alert('Signup successful!');
-            navigation.navigate('Home');
+            setTimeout(() => {
+              navigation.navigate('Home');
+            }, 3000); 
           })
           .catch((error) => {
             Alert.alert('Error saving data: ' + error.message);

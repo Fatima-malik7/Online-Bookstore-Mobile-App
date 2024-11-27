@@ -8,14 +8,19 @@ const Header = ({  notificationCount }) => {
 
   // Handle navigation to Cart screen
   const handleAddToCart = () => {
-    alert('Added to cart!');
-    navigation.navigate('Cart'); // Navigate to Cart screen
+    setTimeout(() => {
+      navigation.navigate('Cart'); // Navigate to Cart screen
+    }, 3000);
+    
   };
 
   // Handle navigation to Login screen
   const handleLogin = () => {
     alert('Profile Logout!');
-    navigation.navigate('Auth'); // Navigate to Login screen
+    setTimeout(() => {
+      navigation.navigate('Auth'); // Navigate to Login screen
+    }, 3000);
+    
   };
 
   return (

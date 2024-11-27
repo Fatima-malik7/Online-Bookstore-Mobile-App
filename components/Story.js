@@ -11,7 +11,10 @@ const Story = ({ heading, books = [], addToCart, notificationCount = 0, cartItem
   const [cartCount, setCartCount] = useState(cartItems.length);
 
   const handleBuyNow = (book) => {
-    navigation.navigate('Checkout', { selectedItems: [book] }); // Pass as an array
+    setTimeout(() => {
+      navigation.navigate('Checkout', { selectedItems: [book] }); // Pass as an array
+    }, 3000); 
+    
   };
 
   const handleAddToCart = (book) => {

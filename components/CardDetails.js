@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import Header from './Header1';
-
+import { useNavigation } from '@react-navigation/native';
 const BASE_URL = 'https://bookbliss-f0256-default-rtdb.firebaseio.com/';
 
 const CardDetails = () => {
@@ -13,6 +13,7 @@ const CardDetails = () => {
   const [errors, setErrors] = useState({});
   const [isProcessing, setIsProcessing] = useState(false); // State to manage processing state
 
+  const navigation = useNavigation();
   const validateInputs = () => {
     const newErrors = {};
     if (!cardHolder) {
@@ -65,12 +66,11 @@ const CardDetails = () => {
       console.log('Saving card details to Firebase...');
       await axios.post(`${BASE_URL}/cardDetails.json`, cardDetails);
       console.log('Card details saved:', cardDetails);
-
+      Alert.alert(
+        'Payment Success 🎉',
+        "Thank you for the order, Continue Shopping! 😊",)
       // Show success message after processing time
       setTimeout(() => {
-        Alert.alert(
-          'Payment Success 🎉',
-          "Payment successful! You'll be notified in a few minutes. Thank you for the order 😊",
           [
             {
               text: 'OK',
@@ -85,8 +85,8 @@ const CardDetails = () => {
               },
             },
           ]
-        );
-      }, 1000); // Delay alert for 1 second after processing
+        navigation.navigate('Home');
+      }, 3000); // Delay alert for 1 second after processing
 
     } catch (error) {
       console.error('Error saving card details:', error);

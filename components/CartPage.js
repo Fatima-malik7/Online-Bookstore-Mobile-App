@@ -22,7 +22,10 @@ const CartPage = ({ cartItems, removeFromCart }) => {
       alert('Please select items to checkout.');
       return;
     }
-    navigation.navigate('Checkout', { selectedItems: selected }); // Pass selected items to Checkout screen
+    setTimeout(() => {
+      navigation.navigate('Checkout', { selectedItems: selected }); // Pass selected items to Checkout screen
+    }, 3000); 
+   
   };
 
   return (

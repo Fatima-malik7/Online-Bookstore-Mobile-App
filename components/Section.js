@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from './Header'; 
@@ -9,11 +9,40 @@ import i from '../assets/horror.jpg';
 import j from '../assets/Mystery.jpg';
 import m from '../assets/litrature.jpg';
 
+const bookData = {
+  English: [
+    { id: '1', name: 'Crime And Thrills', image: b, screen: 'CrimeAndThrills' },
+    { id: '2', name: 'Fairytales', image: c, screen: 'Fairytales' },
+    { id: '3', name: 'Friction', image: d, screen: 'Friction' },
+    { id: '4', name: 'Horror', image: i, screen: 'Horror' },
+    { id: '5', name: 'Mystery', image: j, screen: 'Mystery' },
+    { id: '6', name: 'Literature', image: m, screen: 'Literature' },
+  ],
+  Urdu: [
+    { id: '7', name: 'Crime And Thrills', image: b, screen: 'UCrimeAndThrills' },
+    { id: '8', name: 'Fairytales', image: c, screen: 'UFairytales' },
+    { id: '9', name: 'Friction', image: d, screen: 'UFriction' },
+    { id: '10', name: 'Horror', image: i, screen: 'UHorror' },
+    { id: '11', name: 'Mystery', image: j, screen: 'UMystery' },
+    { id: '12', name: 'Literature', image: m, screen: 'ULiterature' },
+  ],
+};
+
 function Section({ cartItems = [], notificationCount = 0 }) {
   const navigation = useNavigation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigateTo = (screen) => {
     navigation.navigate(screen);
+  };
+
+  const filterBooks = (category) => {
+    if (searchQuery.toLowerCase().includes(category.toLowerCase())) {
+      return bookData[category];
+    }
+    return bookData[category].filter((book) =>
+      book.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   };
 
   return (
@@ -21,55 +50,40 @@ function Section({ cartItems = [], notificationCount = 0 }) {
       <Header cartCount={cartItems.length} notificationCount={notificationCount} />
       <View style={styles.sectionContainer}>
         <View style={styles.searchBarContainer}>
-          <TextInput 
-            style={styles.searchBar} 
-            placeholder="Book, Category, Author" 
-            placeholderTextColor="#aaa" 
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Book, Author..."
+            placeholderTextColor="#aaa"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
         </View>
-        <Text style={styles.heading}>English</Text>
-        <ScrollView horizontal contentContainerStyle={styles.imageScroll}>
-          <TouchableOpacity onPress={() => navigateTo('CrimeAndThrills')}>
-            <Image source={b} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Fairytales')}>
-            <Image source={c} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Friction')}>
-            <Image source={d} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Horror')}>
-            <Image source={i} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Mystery')}>
-            <Image source={j} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Literature')}>
-            <Image source={m} style={styles.image} />
-          </TouchableOpacity>
-        </ScrollView>
 
-        <Text style={styles.heading}>Urdu</Text>
-        <ScrollView horizontal contentContainerStyle={styles.imageScroll}>
-          <TouchableOpacity onPress={() => navigateTo('UCrimeAndThrills')}>
-            <Image source={b} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('UFairytales')}>
-            <Image source={c} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('UFriction')}>
-            <Image source={d} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('UHorror')}>
-            <Image source={i} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('UMystery')}>
-            <Image source={j} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('ULiterature')}>
-            <Image source={m} style={styles.image} />
-          </TouchableOpacity>
-        </ScrollView>
+        {filterBooks('English').length > 0 && (
+          <>
+            <Text style={styles.heading}>English</Text>
+            <ScrollView horizontal contentContainerStyle={styles.imageScroll}>
+              {filterBooks('English').map((book) => (
+                <TouchableOpacity key={book.id} onPress={() => navigateTo(book.screen)}>
+                  <Image source={book.image} style={styles.image} />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </>
+        )}
+
+        {filterBooks('Urdu').length > 0 && (
+          <>
+            <Text style={styles.heading}>Urdu</Text>
+            <ScrollView horizontal contentContainerStyle={styles.imageScroll}>
+              {filterBooks('Urdu').map((book) => (
+                <TouchableOpacity key={book.id} onPress={() => navigateTo(book.screen)}>
+                  <Image source={book.image} style={styles.image} />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </>
+        )}
       </View>
     </View>
   );

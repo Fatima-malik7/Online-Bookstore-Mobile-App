@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // For FontAwesome icons
 import { useNavigation } from '@react-navigation/native'; // React Navigation
 
@@ -7,8 +7,9 @@ const Header = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    Alert.alert("Profile Logout!");
-    navigation.navigate('Auth'); // Navigate to Login screen
+    setTimeout(() => {
+      navigation.navigate('Auth'); // Navigate to Login screen
+    }, 3000);
   };
 
   return (

@@ -1,16 +1,19 @@
 // Cash on delivery
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import Header from './Header1';
 const CashOnDelivery = () => {
   const route = useRoute();
   const { subtotal = 0, deliveryCharges = 250 } = route.params || {};
   const totalPayment = subtotal + deliveryCharges;
-
-  const handleOrder = () => {
-    alert(`Order Confirmed! Total Payment: PKR ${totalPayment}`);
-  };
+const navigation = useNavigation();
+const handleOrder = () => {
+  alert('Order Confirmed! Continue Shopping 🎉');
+  setTimeout(() => {
+    navigation.navigate('Home');
+  }, 3000); 
+};
 
   return (
     <View style={styles.container}>

@@ -23,7 +23,9 @@ const Login = ({ toggleAuth }) => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 Alert.alert('Login successful!', `Welcome back, ${user.email}`);
-                navigation.navigate('Home'); // Redirect to the Home screen
+                setTimeout(() => {
+                    navigation.navigate('Home');
+                  }, 3000); 
             })
             .catch((error) => {
                 const errorMessage = error.message;

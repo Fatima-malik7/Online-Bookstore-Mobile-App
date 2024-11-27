@@ -1,28 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from './Header1';
+
+const BASE_URL = 'https://bookbliss-f0256-default-rtdb.firebaseio.com/';
 
 const CheckoutForm = () => {
   const route = useRoute();
   const { selectedItems = [] } = route.params || {};
   const [description, setDescription] = useState('');
-  const [bookDetails, setBookDetails] = useState(selectedItems.map(item => item.name).join(', '));
+  const [bookDetails, setBookDetails] = useState(
+    selectedItems.map((item) => item.name).join(', ')
+  );
   const [bookPrice, setBookPrice] = useState(0); // Initialize to 0
   const deliveryCharges = 250;
   const navigation = useNavigation();
 
-  // Calculate bookPrice and totalAmount when selectedItems change
+  // Calculate bookPrice and totalAmount dynamically
   useEffect(() => {
-    const totalPrice = selectedItems.reduce((total, item) => parseFloat(total) + parseFloat(item.price), 0);
+    const totalPrice = selectedItems.reduce(
+      (total, item) => parseFloat(total) + parseFloat(item.price),
+      0
+    );
     setBookPrice(parseFloat(totalPrice));
   }, [selectedItems]);
 
   const totalAmount = bookPrice + deliveryCharges;
 
+  // Function to save data to Firebase
+  const saveToFirebase = async () => {
+    const orderData = {
+      address: description,
+      bookDetails,
+      bookPrice,
+      deliveryCharges,
+      totalAmount,
+      orderDate: new Date().toISOString(),
+    };
+
+    try {
+      console.log('Order Data:', orderData);
+      const response = await fetch(`${BASE_URL}orders.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const responseData = await response.json();
+      console.log('Firebase Response:', responseData);
+
+      if (response.ok) {
+        Alert.alert('Success', 'Order placed successfully!');
+        navigation.navigate('Pay', { subtotal: bookPrice, deliveryCharges });
+      } else {
+        Alert.alert('Error', 'Failed to save order. Please try again.');
+        console.error('Response Error:', responseData);
+      }
+    } catch (error) {
+      console.error('Error saving order:', error);
+      Alert.alert('Error', 'An error occurred while saving your order.');
+    }
+  };
+
+  // Form submission handler
   const handleConfirm = () => {
-    navigation.navigate('Pay', { subtotal: bookPrice, deliveryCharges });
-    Alert.alert('Success', 'Confirmed details!');
+    if (!description.trim()) {
+      Alert.alert('Validation Error', 'Please enter your address.');
+      return;
+    }
+    saveToFirebase();
   };
 
   return (
