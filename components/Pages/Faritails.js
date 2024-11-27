@@ -1,3 +1,5 @@
+//Faritails.js
+
 import React from 'react';
 import { View, StyleSheet,ScrollView } from 'react-native';
 import Story from '../Story'; 

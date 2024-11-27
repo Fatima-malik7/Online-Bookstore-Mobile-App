@@ -22,7 +22,7 @@ const Login = ({ toggleAuth }) => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                Alert.alert('Login successful!', `Welcome back, ${user.email}`);
+                Alert.alert('Login successful! ✅ ', `Welcome back, ${user.email}`);
                 setTimeout(() => {
                     navigation.navigate('Home');
                   }, 3000); 

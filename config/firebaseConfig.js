@@ -1,9 +1,8 @@
-// firebaseConfig.js
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
+import { getDatabase, ref, set, get, remove, push } from 'firebase/database'; // Corrected to include push
+import { getAuth } from 'firebase/auth'; // Authentication service (if required)
 
-
+// Firebase configuration object
 const firebaseConfig = {
   apiKey: "AIzaSyAjuXnhnH5gJ29dTGXbg67KiGQ3ZeNKPA8",
   authDomain: "bookbliss-f0256.firebaseapp.com",
@@ -15,10 +14,12 @@ const firebaseConfig = {
   measurementId: "G-S5EJ4G7NM5"
 };
 
-
-
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
 
-export { auth, database };
+// Initialize Firebase services
+const database = getDatabase(app);
+const auth = getAuth(app); // Initialize auth
+
+// Exporting Firebase services and functions for use in other parts of your app
+export { app, database, auth, ref, set, get, remove, push };
