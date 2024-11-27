@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, database } from '../config/firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
 import styles from '../AppStyling';
 
@@ -14,35 +14,48 @@ const Signup = ({ toggleAuth }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
+    // Check if passwords match
     if (password !== confirmPassword) {
       Alert.alert('Passwords do not match!');
       return;
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+    try {
+      // Check if the email is already in use
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length > 0) {
+        Alert.alert('Error: This email is already in use!');
+        return;
+      }
 
-        // Save user data to Realtime Database
-        const userRef = ref(database, `users/${user.uid}`);
-        set(userRef, {
-          username: username,
-          email: email,
-        })
-          .then(() => {
-            Alert.alert('Signup successful!');
-            setTimeout(() => {
-              navigation.navigate('Home');
-            }, 3000); 
+      // Proceed with sign-up if email is not in use
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          // Save user data to Realtime Database
+          const userRef = ref(database, `users/${user.uid}`);
+          set(userRef, {
+            username: username,
+            email: email,
           })
-          .catch((error) => {
-            Alert.alert('Error saving data: ' + error.message);
-          });
-      })
-      .catch((error) => {
-        Alert.alert('Error: ' + error.message);
-      });
+            .then(() => {
+              Alert.alert('Signup successful!');
+              setTimeout(() => {
+                navigation.navigate('Home');
+              }, 3000);
+            })
+            .catch((error) => {
+              Alert.alert('Error saving data: ' + error.message);
+            });
+        })
+        .catch((error) => {
+          Alert.alert('Error during sign-up: ' + error.message);
+        });
+    } catch (error) {
+      Alert.alert('Error checking email: ' + error.message);
+    }
   };
 
   return (

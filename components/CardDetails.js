@@ -111,7 +111,7 @@ const CardDetails = () => {
             style={[styles.input, errors.cardHolder && styles.inputError]}
             value={cardHolder}
             onChangeText={setCardHolder}
-            placeholder="JOHN DOE"
+            placeholder="FATIMA MALIK"
             autoCapitalize="characters"
           />
           {errors.cardHolder && <Text style={styles.errorText}>{errors.cardHolder}</Text>}
