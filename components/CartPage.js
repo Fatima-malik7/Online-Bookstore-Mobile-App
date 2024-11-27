@@ -1,13 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from './Header1';
+import { database, ref, get, remove } from '../config/firebaseConfig'; // Firebase imports
 
-const CartPage = ({ cartItems, removeFromCart }) => {
+const CartPage = () => {
+  const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState({});
   const navigation = useNavigation();
 
-  // Function to handle selecting/deselecting items
+  // Fetch cart items from Firebase on component mount
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const cartRef = ref(database, 'cartItems');
+        const snapshot = await get(cartRef);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const fetchedCartItems = Object.keys(data).map((key) => ({
+            id: key, // Firebase unique key
+            ...data[key],
+          }));
+          setCartItems(fetchedCartItems);
+        }
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  // Remove an item from Firebase and local state
+  const removeFromCart = async (itemId) => {
+    try {
+      const itemRef = ref(database, `cartItems/${itemId}`);
+      await remove(itemRef); // Remove the item from Firebase
+      setCartItems((prev) => prev.filter((item) => item.id !== itemId)); // Update local state
+      console.log(`Item with ID ${itemId} removed from cart.`);
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+    }
+  };
+
+  // Handle selecting/deselecting items
   const handleSelectItem = (index) => {
     setSelectedItems((prev) => ({
       ...prev,
@@ -15,7 +51,7 @@ const CartPage = ({ cartItems, removeFromCart }) => {
     }));
   };
 
-  // Function to checkout selected items
+  // Handle checkout for selected items
   const handleCheckoutSelected = () => {
     const selected = cartItems.filter((_, index) => selectedItems[index]);
     if (selected.length === 0) {
@@ -24,8 +60,7 @@ const CartPage = ({ cartItems, removeFromCart }) => {
     }
     setTimeout(() => {
       navigation.navigate('Checkout', { selectedItems: selected }); // Pass selected items to Checkout screen
-    }, 3000); 
-   
+    }, 3000);
   };
 
   return (
@@ -39,10 +74,10 @@ const CartPage = ({ cartItems, removeFromCart }) => {
           <>
             <FlatList
               data={cartItems}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item) => item.id}
               renderItem={({ item, index }) => (
                 <View style={styles.cartItem}>
-                  {/* Custom checkbox using TouchableOpacity */}
+                  {/* Custom checkbox */}
                   <TouchableOpacity
                     style={[
                       styles.checkbox,
@@ -51,22 +86,24 @@ const CartPage = ({ cartItems, removeFromCart }) => {
                     onPress={() => handleSelectItem(index)}
                   >
                     {selectedItems[index] && (
-                      <Text style={styles.checkboxText}>✔</Text> // Represent checked state
+                      <Text style={styles.checkboxText}>✔</Text>
                     )}
                   </TouchableOpacity>
-                  <Image source={{ uri: item.image }} style={styles.image} />
+                  <Image source={item.image} style={styles.image} />
                   <Text style={styles.itemName}>{item.name}</Text>
                   <TouchableOpacity
                     style={styles.removeButton}
-                    onPress={() => removeFromCart(index)}
+                    onPress={() => removeFromCart(item.id)} // Pass Firebase ID
                   >
                     <Text style={styles.removeButtonText}>Remove</Text>
                   </TouchableOpacity>
-
                 </View>
               )}
             />
-            <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckoutSelected}>
+            <TouchableOpacity
+              style={styles.checkoutButton}
+              onPress={handleCheckoutSelected}
+            >
               <Text style={styles.checkoutButtonText}>Checkout</Text>
             </TouchableOpacity>
           </>
@@ -85,18 +122,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F6F4',
   },
   formWrapper: {
-    height: '40%',
     width: '100%',
     maxWidth: 350,
     padding: 12,
     backgroundColor: '#f3f6f4',
     borderRadius: 25,
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-    zIndex: 3,
   },
   header: {
     fontSize: 20,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     marginBottom: 20,
     color: '#556B2F',
     textAlign: 'center',
